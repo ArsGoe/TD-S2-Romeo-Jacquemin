@@ -95,7 +95,7 @@ std::vector<int> generate_random_vector(size_t const size, int const max = 100) 
 
 bool search(std::vector<int> & vec, size_t left, size_t right, int value) {
    
-   while (left <= right)
+   while (left + 1 != right)
    {
       int middle = (left + right) / 2;
       if (value == vec.at(middle))
@@ -111,6 +111,7 @@ bool search(std::vector<int> & vec, size_t left, size_t right, int value) {
          }
       }
    }
+   return false;
 }
 
 bool search(std::vector<int> & vec, int i) {
@@ -136,8 +137,9 @@ int main(int argc, char const *argv[])
       ScopedTimer timer("nom du chronomètre 3");
       std::sort(third_list_to_sort.begin(), third_list_to_sort.end());
    }
-   */
+   
    std::vector<int> liste = {1, 2, 2, 3, 4, 5, 7, 8, 10, 12};
    std::cout << search(liste, 6) << std::endl;
+   */
    return 0;
 }
