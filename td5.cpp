@@ -117,6 +117,7 @@ struct Position{
 
 struct Map{
    int size_x, size_y, gardian_x, gardian_y;
+   Direction guard_direction;
    std::vector<Position> obstacles;
 
    bool check_pos_is_obstacle(Position pos_a) {
@@ -144,6 +145,22 @@ Map parse_input(std::istream& input_stream) {
          else if (c == '^') {
             map.gardian_x = i;
             map.gardian_y = number_of_lines;
+            map.guard_direction = Direction::HAUT;
+         }
+         else if (c == "v") {
+            map.gardian_x = i;
+            map.gardian_y = number_of_lines;
+            map.guard_direction = Direction::BAS;
+         }
+         else if ( c == "<") {
+            map.gardian_x = i;
+            map.gardian_y = number_of_lines;
+            map.guard_direction = Direction::GAUCHE;
+         }
+         else if (c == ">") {
+            map.gardian_x = i;
+            map.gardian_y = number_of_lines;
+            map.guard_direction = Direction::DROITE;
          }
          i++;
        }
@@ -171,26 +188,32 @@ struct WalkResult {
 WalkResult Simulation(Map map){
    WalkResult resu;
    Position current_gardian_pos = Position(map.gardian_x, map.gardian_y);
-   Direction move_direction = Direction::HAUT;
-
-   while (current_gardian_pos.x <= map.size_x && current_gardian_pos.y <= map.size_y && current_gardian_pos.x >= 0 && current_gardian_pos.y >= 0)
+   bool stop = false
+   while (!stop)
    {
       resu.visited_positions.insert(current_gardian_pos);
       if(map.check_pos_is_obstacle(current_gardian_pos + move_direction)){
-         move_direction = turn_right(move_direction);
+         map.guard_direction = turn_right(map.guard_direction);
+      }
+      if(Direction::HAUT &&  (current_gardian_pos.y  + move_direction).y <= map.size_y){
+         stop = true
+      }
+      if(Direction::BAS &&  (current_gardian_pos.y + move_direction).y < 0 ){
+         stop = true
+      }
+      if(Direction::DROITE &&  (current_gardian_pos.x + move_direction).x <= map.size_x){
+         stop = true
+      }
+      if(Direction::GAUCHE &&  (current_gardian_pos.y  + move_direction).x < 0){
+         stop = true
       }
    }
    
-
+   return resu;
 }
 
 int main(int argc, char const *argv[])
 {
    
-   std::cout << folding_string_ordered_hash("Bonjour", 300) << std::endl;
-   Position pos(2, 3);
-   Direction dir = Direction::HAUT;
-   Position newPos { pos + dir };
-   newPos += dir;
    return 0;
 }
