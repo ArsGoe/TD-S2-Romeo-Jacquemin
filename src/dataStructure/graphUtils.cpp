@@ -49,10 +49,41 @@ std::unordered_map<IDType, std::pair<float, IDType>> Dijkstra(WeightedGraph cons
     // priority queue of pair of current cost from starting node and current node id
     // this will sort node base on the cost (as pair are ordered with lexicographical order)
     min_priority_queue<std::pair<float, IDType>> to_visit {};
-
     to_visit.push({0.0f, start});
 
     /* TODO */
+    while (!to_visit.empty())
+    {
+        auto const current { to_visit.top() };
+        to_visit.pop();
+
+        if (distances.find(current.second)) {
+            continue
+        }
+
+        auto const voisin_prioritaire {};
+        for (auto const& edge : graph.get_neighbors(current.second)) {
+
+            if (distances.find(edge.to))
+            {
+                auto noeud = distances.find(edge.to);
+                // Me demandez pas pourquoi la flèche fonctionne c'est GeeksForGeeks qui m'a dit
+                // Ce TD est en train de me tuer à grand feu, je ne veux plus comprendre, je veux juste en finir
+                if (current.first + edge.weight < noeud->first)
+                {
+                    noeud->first = current.first + edge.weight;
+                    noeud->second = current.second;
+                }
+                std::pair<float, IDType>distance {current.first + edge.weight, edge.to};
+                to_visit.push(distance);
+            }
+            else {
+                std::pair<float, IDType>distance {current.first + edge.weight, edge.to};
+                distances.push({current.second, distance});
+                to_visit.push(distance);
+            }
+        }
+    }
     
     return distances;
 }
